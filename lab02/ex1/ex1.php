@@ -11,7 +11,9 @@ function printOutput(string $content = ''): void
         return;
     }
 
-    echo nl2br(htmlspecialchars($content, ENT_QUOTES, 'UTF-8')) . '<br>';
+    echo '<pre>';
+    echo htmlspecialchars($content, ENT_QUOTES, 'UTF-8');
+    echo '</pre>';
 }
 
 function formatCurrency(float $amount): string
@@ -30,6 +32,7 @@ try {
         new CartItem('Chuột không dây', 350000, 2),
         new CartItem('Bàn phím cơ', 1200000, 1),
         new CartItem('Tai nghe', 850000, 2),
+        new CartItem('Karina', 1, 1),
     ];
 
     // 2. Thêm sản phẩm vào giỏ hàng bằng addItem().

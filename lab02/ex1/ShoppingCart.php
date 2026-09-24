@@ -54,38 +54,76 @@ class ShoppingCart
         return $total;
     }
 
-    /**
-     * Tạo chuỗi hiển thị toàn bộ giỏ hàng.
-     */
+    private static function padText(string $text, int $width): string
+    {
+        $length = mb_strlen($text, 'UTF-8');
+
+        // Nếu nội dung dài hơn kích thước ô thì cắt bớt
+        if ($length > $width) {
+            $text = mb_substr($text, 0, $width - 3, 'UTF-8') . '...';
+            $length = mb_strlen($text, 'UTF-8');
+        }
+
+        return $text . str_repeat(' ', $width - $length);
+    }
+
     public function displayCart(): string
     {
         if (empty($this->items)) {
             return "Giỏ hàng hiện đang trống.\nTổng tiền: 0 VNĐ\n";
         }
 
-        $output = sprintf(
-            "%-4s | %-22s | %-14s | %-10s | %-16s\n",
-            'STT',
-            'Tên sản phẩm',
-            'Đơn giá',
-            'Số lượng',
-            'Thành tiền'
-        );
-        $output .= str_repeat('-', 78) . "\n";
+        // Độ rộng từng cột
+        $sttWidth = 5;
+        $nameWidth = 25;
+        $priceWidth = 18;
+        $quantityWidth = 12;
+        $totalWidth = 20;
+
+        $separator =
+            '+' . str_repeat('-', $sttWidth + 2) .
+            '+' . str_repeat('-', $nameWidth + 2) .
+            '+' . str_repeat('-', $priceWidth + 2) .
+            '+' . str_repeat('-', $quantityWidth + 2) .
+            '+' . str_repeat('-', $totalWidth + 2) .
+            "+\n";
+
+        $output = $separator;
+
+        $output .=
+            '| ' . self::padText('STT', $sttWidth) .
+            ' | ' . self::padText('Tên sản phẩm', $nameWidth) .
+            ' | ' . self::padText('Đơn giá', $priceWidth) .
+            ' | ' . self::padText('Số lượng', $quantityWidth) .
+            ' | ' . self::padText('Thành tiền', $totalWidth) .
+            " |\n";
+
+        $output .= $separator;
 
         foreach ($this->items as $index => $item) {
-            $output .= sprintf(
-                "%-4d | %-22s | %-14s | %-10d | %-16s\n",
-                $index + 1,
-                $item->getName(),
-                self::formatCurrency($item->getPrice()),
-                $item->getQuantity(),
-                self::formatCurrency($item->getTotal())
-            );
+            $output .=
+                '| ' . self::padText((string) ($index + 1), $sttWidth) .
+                ' | ' . self::padText($item->getName(), $nameWidth) .
+                ' | ' . self::padText(
+                    self::formatCurrency($item->getPrice()),
+                    $priceWidth
+                ) .
+                ' | ' . self::padText(
+                    (string) $item->getQuantity(),
+                    $quantityWidth
+                ) .
+                ' | ' . self::padText(
+                    self::formatCurrency($item->getTotal()),
+                    $totalWidth
+                ) .
+                " |\n";
         }
 
-        $output .= str_repeat('-', 78) . "\n";
-        $output .= 'Tổng tiền: ' . self::formatCurrency($this->calculateTotal()) . "\n";
+        $output .= $separator;
+
+        $output .= 'Tổng tiền: '
+            . self::formatCurrency($this->calculateTotal())
+            . "\n";
 
         return $output;
     }
