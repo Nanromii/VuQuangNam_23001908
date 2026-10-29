@@ -3,10 +3,10 @@ const { createApp } = Vue;
 
 const defaultStudent = () => ({
   id: 'SV001',
-  name: 'Nguyễn Văn An',
+  name: 'Vũ Quang Nam',
   className: 'CNTT-K24',
   avatar: 'assets/student-avatar.svg',
-  gpa: 8.2,
+  gpa: 10.0,
   isStudying: true,
 });
 
