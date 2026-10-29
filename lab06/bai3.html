@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bài 3 — Quản lý công việc cá nhân</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="header-inner"><a class="brand" href="index.html"><span class="brand-mark">V3</span> Thực hành VueJS ·
+        Buổi 6</a>
+      <nav class="top-nav" aria-label="Điều hướng"><a href="index.html">Trang chủ</a><a href="bai1.html">Bài 1</a><a
+          href="bai2.html">Bài 2</a><a class="active" href="bai3.html">Bài 3</a></nav>
+    </div>
+  </header>
+  <main id="app" class="container" v-cloak>
+    <div class="page-label">Bài 03 / v-for · :key · methods · computed</div>
+    <h1>Quản lý công việc cá nhân</h1>
+    <p class="lead">Thêm công việc, đánh dấu hoàn thành, lọc danh sách và theo dõi tiến độ trong ngày mà không tải lại
+      trang.</p>
+    <div class="grid-sidebar">
+      <section class="card">
+        <div class="card-heading">
+          <div>
+            <h2>Công việc hôm nay</h2>
+            <p>Nhập công việc và nhấn Enter hoặc chọn “Thêm”.</p>
+          </div><span class="tag">Danh sách trực tiếp</span>
+        </div>
+        <div class="add-task"><input aria-label="Tên công việc" type="text" v-model.trim="newTask"
+            @keyup.enter="addTask" placeholder="Ví dụ: Hoàn thành bài tập VueJS"><button type="button" class="btn"
+            @click="addTask" :disabled="!newTask.trim()">+ Thêm</button></div>
+        <div class="filter-list" role="group" aria-label="Bộ lọc công việc">
+          <button class="filter" type="button" :class="{active:filter==='all'}" @click="filter='all'">Tất cả</button>
+          <button class="filter" type="button" :class="{active:filter==='pending'}" @click="filter='pending'">Chưa hoàn
+            thành</button>
+          <button class="filter" type="button" :class="{active:filter==='done'}" @click="filter='done'">Đã hoàn
+            thành</button>
+        </div>
+        <!-- Yêu cầu: v-for có :key là id -->
+        <ul class="task-list" v-if="filteredTasks.length > 0">
+          <li class="task-row" v-for="task in filteredTasks" :key="task.id">
+            <input type="checkbox" v-model="task.completed" :aria-label="'Đánh dấu hoàn thành: ' + task.title">
+            <span class="task-name" :class="{done:task.completed}">{{ task.title }}</span>
+            <button type="button" class="task-remove" @click="removeTask(task.id)" :aria-label="'Xóa ' + task.title"
+              title="Xóa công việc">×</button>
+          </li>
+        </ul>
+        <div class="empty-state" v-else role="status">
+          <strong>{{ tasks.length === 0 ? 'Chưa có công việc nào' : 'Không tìm thấy công việc' }}</strong>
+          {{ tasks.length === 0 ? 'Hãy nhập tên công việc để bắt đầu.' : 'Không có công việc nào thuộc bộ lọc này.' }}
+        </div>
+        <div class="task-footer"><span class="small">Hiển thị <strong>{{ filteredTasks.length }}</strong> / {{
+            totalTasks }} công việc</span><button type="button" class="btn btn-danger" @click="clearCompleted"
+            :disabled="completedTasks === 0">Xóa các việc đã hoàn thành</button></div>
+      </section>
+      <aside class="card">
+        <div class="card-heading">
+          <div>
+            <h2>Tổng quan tiến độ</h2>
+            <p>Số liệu được tính bằng computed.</p>
+          </div>
+        </div>
+        <div class="counter-grid">
+          <div class="counter">
+            <div class="n">{{ totalTasks }}</div>
+            <div class="caption">Tổng công việc</div>
+          </div>
+          <div class="counter">
+            <div class="n">{{ pendingTasks }}</div>
+            <div class="caption">Chưa xong</div>
+          </div>
+          <div class="counter">
+            <div class="n">{{ completedTasks }}</div>
+            <div class="caption">Đã xong</div>
+          </div>
+        </div>
+        <div class="notice"><strong>Hướng dẫn:</strong> Chọn ô vuông để đánh dấu hoàn thành; tên công việc sẽ bị gạch
+          ngang. Nút × xóa riêng từng công việc. Các bộ lọc không làm thay đổi dữ liệu gốc.</div>
+      </aside>
+    </div>
+    <p class="footer">Mỗi công việc gồm id, title và completed. Các phép thêm, xóa, thay đổi trạng thái đều sử dụng tính
+      phản ứng của VueJS.</p>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
+  <script src="js/bai3.js"></script>
+</body>
+
+</html>

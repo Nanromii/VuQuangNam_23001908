@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bài 1 — Thẻ thông tin sinh viên</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="header-inner"><a class="brand" href="index.html"><span class="brand-mark">V3</span> Thực hành VueJS ·
+        Buổi 6</a>
+      <nav class="top-nav" aria-label="Điều hướng"><a href="index.html">Trang chủ</a><a class="active"
+          href="bai1.html">Bài 1</a><a href="bai2.html">Bài 2</a><a href="bai3.html">Bài 3</a></nav>
+    </div>
+  </header>
+  <main id="app" class="container" v-cloak>
+    <div class="page-label">Bài 01 / createApp · data · v-bind · v-if · v-show</div>
+    <h1>Thẻ thông tin sinh viên</h1>
+    <p class="lead">Thay đổi dữ liệu bên phải để quan sát thẻ sinh viên và màu xếp loại cập nhật tức thì.</p>
+    <div class="grid-2">
+      <section class="card" aria-label="Thẻ sinh viên">
+        <div class="card-heading">
+          <h2>Hồ sơ sinh viên</h2><span class="tag">Thông tin trực tiếp</span>
+        </div>
+        <div class="student-top">
+          <!-- Yêu cầu: dùng v-bind cho cả đường dẫn ảnh và alt -->
+          <img class="avatar" v-bind:src="student.avatar" v-bind:alt="'Ảnh đại diện của ' + student.name"
+            @error="useDefaultAvatar">
+          <div><span class="small">{{ student.id }}</span>
+            <h2>{{ student.name }}</h2><span class="tag" v-if="student.isStudying">Đang học</span><span
+              class="tag neutral" v-else>Đã nghỉ</span>
+          </div>
+        </div>
+        <dl class="info-list">
+          <div class="info-row">
+            <dt>Mã sinh viên</dt>
+            <dd>{{ student.id }}</dd>
+          </div>
+          <!-- Yêu cầu: dùng v-text cho tên lớp -->
+          <div class="info-row">
+            <dt>Lớp</dt>
+            <dd v-text="student.className"></dd>
+          </div>
+          <div class="info-row">
+            <dt>Điểm trung bình</dt>
+            <dd>{{ formatGpa(student.gpa) }} / 10</dd>
+          </div>
+          <div class="info-row">
+            <dt>Xếp loại học lực</dt>
+            <dd class="grade" :class="gradeClass">{{ classification }}</dd>
+          </div>
+        </dl>
+        <hr class="divider">
+        <button type="button" class="btn btn-quiet" @click="showIntro = !showIntro">{{ showIntro ? 'Ẩn giới thiệu' :
+          'Hiện giới thiệu' }}</button>
+        <!-- Yêu cầu: ẩn/hiện bằng v-show, không xóa khỏi DOM -->
+        <div class="intro" v-show="showIntro">Xin chào! Mình là <strong>{{ student.name }}</strong>, hiện {{
+          student.isStudying ? 'đang học' : 'đã nghỉ học' }} tại lớp <strong>{{ student.className }}</strong>. Đây là
+          thẻ thông tin được cập nhật tự động bằng VueJS.</div>
+      </section>
+      <section class="card" aria-label="Chỉnh sửa dữ liệu sinh viên">
+        <div class="card-heading">
+          <div>
+            <h2>Chỉnh sửa dữ liệu</h2>
+            <p>Các ô nhập dùng v-model để minh họa cập nhật phản ứng.</p>
+          </div>
+        </div>
+        <div class="row-fields">
+          <div class="field"><label for="student-id">Mã sinh viên</label><input id="student-id" type="text"
+              v-model.trim="student.id"></div>
+          <div class="field"><label for="student-class">Tên lớp</label><input id="student-class" type="text"
+              v-model.trim="student.className"></div>
+        </div>
+        <div class="field"><label for="student-name">Họ tên</label><input id="student-name" type="text"
+            v-model.trim="student.name"></div>
+        <div class="field"><label for="avatar-url">Đường dẫn ảnh đại diện</label><input id="avatar-url" type="text"
+            v-model="student.avatar" placeholder="assets/student-avatar.svg">
+          <div class="hint">Có thể dùng đường dẫn ảnh cục bộ hoặc URL ảnh công khai.</div>
+        </div>
+        <div class="field"><label for="student-gpa">Điểm trung bình (0–10)</label><input id="student-gpa" type="number"
+            min="0" max="10" step="0.1" v-model.number="student.gpa">
+          <div class="hint">Thử các mốc: 4,9 · 5 · 6,5 · 8 · 10</div>
+        </div>
+        <div class="field"><label class="checkbox-line"><input type="checkbox" v-model="student.isStudying"> Sinh viên
+            đang học</label></div>
+        <button class="btn btn-outline" type="button" @click="resetStudent">Khôi phục thông tin mẫu</button>
+      </section>
+    </div>
+    <p class="footer">Xếp loại: Giỏi (8–10) · Khá (6,5–dưới 8) · Trung bình (5–dưới 6,5) · Chưa đạt (dưới 5).</p>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
+  <script src="js/bai1.js"></script>
+</body>
+
+</html>
