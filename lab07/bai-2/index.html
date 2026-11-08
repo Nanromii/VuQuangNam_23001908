@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="vi">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Bài 2 • Component sản phẩm | Vue Lab 07</title><link rel="stylesheet" href="../assets/styles.css"></head>
+<body>
+<header class="site-header"><div class="container header-inner"><a class="brand" href="../index.html"><span class="brand-icon">V</span><span>VUE<span class="brand-highlight">LAB</span> <small>07</small></span></a><div class="header-note"><span class="live-dot"></span> Component sản phẩm</div></div></header>
+<div id="app" v-cloak>
+<main class="container page-main">
+  <nav class="breadcrumb"><a href="../index.html">Trang chủ</a><span>/</span><span>Bài 2</span></nav>
+  <div class="page-heading"><div><div class="eyebrow">BÀI THỰC HÀNH 02</div><h1>Danh mục sản phẩm</h1><p>Mỗi thẻ là một component độc lập, nhận dữ liệu từ component cha thông qua props.</p></div><span class="status-pill">{{ sanPhams.length }} sản phẩm</span></div>
+  <div class="component-intro"><strong>Thử ngay:</strong> Nhấn “Xem mô tả” trên bất kỳ thẻ nào. Chỉ thẻ đó thay đổi trạng thái; các thẻ còn lại giữ nguyên. Sản phẩm hết hàng không thể bấm “Mua”.</div>
+  <section class="catalog-grid" aria-label="Danh sách component sản phẩm">
+    <the-san-pham
+      v-for="sanPham in sanPhams"
+      :key="sanPham.id"
+      :ten="sanPham.ten"
+      :gia="sanPham.gia"
+      :anh="sanPham.anh"
+      :mo-ta="sanPham.moTa"
+      :so-luong-ton="sanPham.soLuongTon"
+      @chon-mua="chonMua"
+    ></the-san-pham>
+  </section>
+  <div v-if="thongBao" class="alert alert-success" role="status">{{ thongBao }}</div>
+  <p class="catalog-caption">Component nằm trong <code>bai-2/components/TheSanPham.js</code> và được đăng ký trước khi mount.</p>
+  <p class="page-footer">Bài 2 • Đăng ký component, props, data() riêng, tách file JavaScript</p>
+</main>
+</div>
+<script src="../vendor/vue.global.prod.js"></script>
+<!-- Phải nạp file component trước app.js, tức trước khi gọi .mount(). -->
+<script src="components/TheSanPham.js"></script>
+<script src="app.js"></script>
+</body></html>

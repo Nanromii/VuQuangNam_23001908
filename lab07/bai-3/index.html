@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="vi">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Bài 3 • Giỏ hàng | Vue Lab 07</title><link rel="stylesheet" href="../assets/styles.css"></head>
+<body>
+<header class="site-header"><div class="container header-inner"><a class="brand" href="../index.html"><span class="brand-icon">V</span><span>VUE<span class="brand-highlight">LAB</span> <small>07</small></span></a><div class="header-note"><span class="live-dot"></span> Giỏ hàng tương tác</div></div></header>
+<div id="app" v-cloak>
+<main class="container page-main">
+  <nav class="breadcrumb"><a href="../index.html">Trang chủ</a><span>/</span><span>Bài 3</span></nav>
+  <div class="page-heading"><div><div class="eyebrow">BÀI THỰC HÀNH 03</div><h1>Giỏ hàng của bạn</h1><p>Component con dùng props để hiển thị; gửi yêu cầu thay đổi qua sự kiện $emit.</p></div><span class="status-pill">{{ tongSoLuong }} sản phẩm trong giỏ</span></div>
+  <div class="cart-layout">
+    <section class="panel cart-panel" aria-label="Sản phẩm trong giỏ">
+      <div class="panel-head"><div><h2>Sản phẩm trong giỏ</h2><p>Thay đổi số lượng từ 1 đến 99 hoặc xóa sản phẩm</p></div></div>
+      <template v-if="gioHang.length">
+        <dong-gio-hang v-for="sanPham in gioHang" :key="sanPham.id" :san-pham="sanPham" @doi-so-luong="doiSoLuong" @yeu-cau-xoa="xoaSanPham"></dong-gio-hang>
+      </template>
+      <div v-else class="empty-state"><div class="empty-illustration">🛒</div><strong>Giỏ hàng trống</strong><p>Toàn bộ sản phẩm đã được xóa khỏi giỏ.</p></div>
+      <div v-if="thongBaoLoi" class="alert alert-error" role="alert">{{ thongBaoLoi }}</div>
+      <div style="margin-top:17px"><button class="btn btn-outline btn-small" type="button" @click="khoiPhucGioMau">↻ Khôi phục giỏ mẫu</button></div>
+    </section>
+    <aside class="panel summary-panel" aria-label="Tổng kết đơn hàng">
+      <h2>Tóm tắt giỏ hàng</h2>
+      <div class="summary-line"><span>Số mặt hàng</span><strong>{{ gioHang.length }}</strong></div>
+      <div class="summary-line"><span>Tổng số lượng</span><strong id="tongSoLuong">{{ tongSoLuong }}</strong></div>
+      <hr class="summary-divider">
+      <div class="summary-grand"><span><strong>Tổng tiền</strong></span><strong id="tongTien">{{ dinhDangTien(tongTien) }}</strong></div>
+      <p class="summary-note">Các giá trị được tính tự động bằng computed trong component cha.</p>
+      <div class="sample-callout"><strong>Kiểm thử theo đề:</strong><br>2 bút × 5.000 ₫ + 3 vở × 12.000 ₫ = <strong>46.000 ₫</strong><br>Tổng số lượng: <strong>5</strong>.</div>
+    </aside>
+  </div>
+  <p class="page-footer">Bài 3 • Luồng dữ liệu một chiều, custom events, computed</p>
+</main>
+</div>
+<script src="../vendor/vue.global.prod.js"></script>
+<script src="components/DongGioHang.js"></script>
+<script src="app.js"></script>
+</body></html>
