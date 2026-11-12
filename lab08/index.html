@@ -4,65 +4,71 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý sản phẩm</title>
-    <style>
-        body { font-family: Arial, sans-serif; max-width: 900px; margin: 36px auto; padding: 0 16px; color: #222; }
-        h1 { font-size: 24px; }
-        h2 { font-size: 19px; margin-top: 28px; }
-        form { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; }
-        label { display: flex; flex-direction: column; gap: 6px; }
-        input { padding: 8px; width: 180px; box-sizing: border-box; }
-        button { padding: 8px 14px; cursor: pointer; }
-        table { border-collapse: collapse; width: 100%; margin-top: 12px; }
-        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
-        th { background: #f1f1f1; }
-        .message { color: #b00020; }
-        .actions { white-space: nowrap; }
-        .actions button + button { margin-left: 8px; }
-    </style>
+    <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-    <div id="app">
-        <h1>Quản lý sản phẩm</h1>
+    <main id="app" class="app-container" v-cloak>
+        <header class="page-header">
+            <div>
+                <p class="eyebrow">BÀI THỰC HÀNH 8 · PHP & VUE.JS</p>
+                <h1>Quản lý sản phẩm</h1>
+                <p class="subtitle">Thêm, chỉnh sửa và quản lý sản phẩm trong kho.</p>
+            </div>
+        </header>
 
-        <h2>{{ editingId === null ? 'Thêm sản phẩm' : 'Sửa sản phẩm' }}</h2>
-        <form @submit.prevent="saveProduct">
-            <label>Tên sản phẩm
-                <input v-model="form.name" required maxlength="100">
-            </label>
-            <label>Đơn giá (đồng)
-                <input type="number" v-model.number="form.price" required min="1" step="1">
-            </label>
-            <label>Số lượng tồn
-                <input type="number" v-model.number="form.stock" required min="0" step="1">
-            </label>
-            <button type="submit">Lưu</button>
-        </form>
+        <section class="card" aria-labelledby="form-heading">
+            <div class="card-heading">
+                <h2 id="form-heading">{{ editingId === null ? 'Thêm sản phẩm' : 'Sửa sản phẩm' }}</h2>
+                <span class="section-caption">Thông tin sản phẩm</span>
+            </div>
+            <form @submit.prevent="saveProduct" class="product-form">
+                <label>Tên sản phẩm
+                    <input v-model="form.name" required maxlength="100" placeholder="Nhập tên sản phẩm">
+                </label>
+                <label>Đơn giá (đồng)
+                    <input type="number" v-model.number="form.price" required min="1" step="1" placeholder="VD: 5000">
+                </label>
+                <label>Số lượng tồn
+                    <input type="number" v-model.number="form.stock" required min="0" step="1" placeholder="VD: 20">
+                </label>
+                <button class="btn btn-primary" type="submit">{{ editingId === null ? 'Thêm sản phẩm' : 'Lưu thay đổi' }}</button>
+            </form>
+            <p class="message" v-if="message" role="alert">{{ message }}</p>
+        </section>
 
-        <p class="message" v-if="message" role="alert">{{ message }}</p>
-
-        <h2>Danh sách sản phẩm</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Tên sản phẩm</th>
-                    <th>Đơn giá (đồng)</th>
-                    <th>Số lượng tồn</th>
-                    <th>Thao tác</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="product in products" :key="product.id">
-                    <td>{{ product.name }}</td>
-                    <td>{{ Number(product.price).toLocaleString('vi-VN') }}</td>
-                    <td>{{ product.stock }}</td>
-                    <td class="actions">
-                        <button type="button" @click="editProduct(product)">Sửa</button>
-                        <button type="button" @click="deleteProduct(product)">Xóa</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+        <section class="card" aria-labelledby="list-heading">
+            <div class="card-heading">
+                <h2 id="list-heading">Danh sách sản phẩm</h2>
+                <span class="product-count">{{ products.length }} sản phẩm</span>
+            </div>
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tên sản phẩm</th>
+                            <th>Đơn giá (đồng)</th>
+                            <th>Số lượng tồn</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="product in products" :key="product.id">
+                            <td class="product-name">{{ product.name }}</td>
+                            <td>{{ Number(product.price).toLocaleString('vi-VN') }} ₫</td>
+                            <td><span class="stock" :class="Number(product.stock) === 0 ? 'stock-empty' : 'stock-available'">{{ product.stock }}</span></td>
+                            <td class="actions">
+                                <button class="btn btn-edit" type="button" @click="editProduct(product)">Sửa</button>
+                                <button class="btn btn-delete" type="button" @click="deleteProduct(product)">Xóa</button>
+                            </td>
+                        </tr>
+                        <tr v-if="products.length === 0">
+                            <td colspan="4" class="empty-state">Chưa có sản phẩm nào.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
 
     <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
     <script>
